@@ -6,12 +6,12 @@
   </template>
 
 <script>
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
-    name: 'Home',
-    setup() {
-        return {}
-    },
-})
+  setup() {
+    const message = ref('Hello, Vue 3!');
+    return { message };
+  },
+});
 </script>
