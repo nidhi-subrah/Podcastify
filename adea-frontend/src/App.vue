@@ -6,6 +6,7 @@
         <li><router-link to="/upload">Upload</router-link></li>
         <li><router-link to="/feedback">Feedback</router-link></li>
         <li><router-link to="/chatbot">Chatbot</router-link></li>
+        <li><router-link to="/output">Output</router-link></li>
       </ul>
     </nav>
     <router-view />
