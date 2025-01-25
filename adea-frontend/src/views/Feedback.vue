@@ -1,38 +1,35 @@
 <template>
-    <div class="upload">
-      <h1>Upload Material</h1>
-      <input type="file" @change="handleFile" />
-      <button @click="uploadFile">Upload</button>
-      <div v-if="summary">
-        <h2>Summary:</h2>
-        <p>{{ summary }}</p>
-      </div>
-    </div>
-  </template>
-  
-  <script>
-  import { ref } from "vue";
-  import axios from "axios";
-  
-  export default {
-    setup() {
-      const file = ref(null);
-      const summary = ref("");
-  
-      const handleFile = (event) => {
-        file.value = event.target.files[0];
-      };
-  
-      const uploadFile = async () => {
-        const formData = new FormData();
-        formData.append("file", file.value);
-  
-        const response = await axios.post("http://localhost:5000/process-text", formData);
-        summary.value = response.data.summary;
-      };
-  
-      return { file, summary, handleFile, uploadFile };
-    },
-  };
-  </script>
-  
+  <div class="feedback">
+    <h1>Submit Feedback</h1>
+    <textarea v-model="feedback" placeholder="Enter feedback here"></textarea>
+    <button class="btn-primary" @click="submitFeedback">Submit</button>
+  </div>
+</template>
+
+<script>
+import { ref } from 'vue';
+export default {
+  setup() {
+    const feedback = ref('');
+    const submitFeedback = async () => {
+      alert(`Feedback submitted: ${feedback.value}`);
+      feedback.value = '';
+    };
+    return { feedback, submitFeedback };
+  },
+};
+</script>
+
+<style scoped>
+.feedback {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+textarea {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 10px;
+}
+</style>

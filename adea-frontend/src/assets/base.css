@@ -35,7 +35,6 @@
 
   --section-gap: 160px;
 }
-
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background: var(--vt-c-black);
