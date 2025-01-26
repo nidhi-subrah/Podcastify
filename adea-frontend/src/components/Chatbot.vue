@@ -1,13 +1,13 @@
 <template>
   <div class="chatbot">
-    <h1>Talk to your Textbook!</h1>
+    <!-- <h1>Talk to your Textbook!</h1>
     <div class="chat-window">
       <div v-for="(message, index) in chatHistory" :key="index" class="message">
         <div :class="message.role === 'user' ? 'user-message' : 'bot-message'">
           <p>{{ message.content }}</p>
         </div>
       </div>
-      <p v-if="isLoading" class="loading-message">Bot is typing...</p> <!-- Loading message -->
+      <p v-if="isLoading" class="loading-message">Bot is typing...</p> Loading message
     </div>
     <div class="chat-input">
       <input
@@ -17,7 +17,8 @@
         @keydown.enter="sendQuestion"
       />
       <button class="btn-primary" @click="sendQuestion">Send</button>
-    </div>
+    </div> -->
+    <h1> Coming soon! </h1>
   </div>
 </template>
 
