@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import dotenv
 from podcastify import convert_pdf_to_text, summarize_text_spacy, generate_podcast_script, get_audio
-
+import io
 app = Flask(__name__)
 CORS(app)
 
@@ -48,9 +48,9 @@ def upload_file():
     return jsonify({"error": "Invalid file type"}), 400
 
 # Route to serve uploaded files dynamically
-@app.route("/uploads/<path:filename>", methods=["GET"])
-def serve_uploaded_file(filename):
-    return send_from_directory(UPLOAD_FOLDER, filename)
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.route("/audio", methods=["POST"])
 def generate_audio():
