@@ -10,9 +10,9 @@ const routes = [
   { path: "/upload", name: "Upload", component: Upload },
   { path: "/feedback", name: "Feedback", component: Feedback },
   { path: "/chatbot", name: "Chatbot", component: Chatbot }, // Chatbot route
-  { path: "/output", name: "Output", component: Output }, // Output route
-];
+  { path: '/output', name: 'Output', component: Output },
 
+];
 const router = createRouter({
   history: createWebHistory(),
   routes,

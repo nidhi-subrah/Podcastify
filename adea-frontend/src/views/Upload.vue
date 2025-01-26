@@ -1,18 +1,16 @@
 <template>
   <div class="upload">
-    <h1>Upload Material</h1>
-    <input type="file" @change="handleFile" />
-    <button class="btn-primary" @click="uploadFile">Upload</button>
-    <div v-if="summary">
-      <h2>Summary:</h2>
-      <p>{{ summary }}</p>
-    </div>
+    <FileUpload />
   </div>
 </template>
 
 <script>
 import { ref } from 'vue';
+import FileUpload from '../components/FileUpload.vue';
 export default {
+  components:{
+    FileUpload
+  },
   setup() {
     const file = ref(null);
     const summary = ref('');
