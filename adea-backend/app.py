@@ -42,8 +42,9 @@ def extract_text_from_pdf(file_path):
 def summarize_text(text):
     max_chunk_size = 1000
     chunks = [text[i:i + max_chunk_size] for i in range(0, len(text), max_chunk_size)]
-    summaries = [summarizer(chunk, max_length=150, min_length=50, do_sample=False)[0]['summary_text'] for chunk in chunks]
+    summaries = [summarizer(chunk, max_length=min(150, len(chunk)//2), min_length=10, do_sample=False)[0]['summary_text'] for chunk in chunks]
     return " ".join(summaries)
+
 
 def get_audio_from_speechify(text):
     url = f"{API_BASE_URL}/v1/audio/speech"
@@ -84,7 +85,7 @@ def upload_file():
         with open(audio_file_path, "wb") as audio_file:
             audio_file.write(audio)
 
-        return jsonify({"message": "Podcast generated", "audio_file": f"/download/podcast.mp3"})
+        return jsonify({"message": "Podcast generated", "audio_file": "/download/podcast.mp3"})
 
     return jsonify({"error": "Invalid file type"}), 400
 
