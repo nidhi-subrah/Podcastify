@@ -5,6 +5,7 @@ from flask_cors import CORS
 import dotenv
 from podcastify import convert_pdf_to_text, summarize_text_spacy, generate_podcast_script, get_audio
 import io
+
 app = Flask(__name__)
 CORS(app)
 
