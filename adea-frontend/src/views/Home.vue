@@ -1,8 +1,9 @@
 <template>
   <div class="home">
     <div class="hero">
-      <h1>Welcome to ADEA</h1>
-      <p>Your accessibility-focused digital assistant for education.</p>
+      <h1>Welcome to Podcastify</h1>
+      <p> Your digital education assistent making learning fun and accessible.</p>
+      <p> Study smarter not harder!</p>
       <router-link to="/upload" class="cta-button">Get Started</router-link>
     </div>
   </div>

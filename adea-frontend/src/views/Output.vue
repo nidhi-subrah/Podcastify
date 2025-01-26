@@ -3,20 +3,27 @@
     <h1>Podcast Generated</h1>
     <p>Your text has been converted into a podcast! Click play to listen.</p>
 
-    <!-- Audio Player Component -->
-    <AudioPlayer :audioSource="audioFile" />
+    <!-- Pass the audio file URL as a prop -->
+    <AudioPlayer :audioUrl="audioUrl" />
   </div>
 </template>
 
 <script>
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import AudioPlayer from "../components/AudioPlayer.vue";
 
 export default {
   components: { AudioPlayer },
-  data() {
-    return {
-      audioFile: "http://localhost:5000/output/audio.mp3", // Replace with actual URL or dynamic data
-    };
+  setup() {
+    const route = useRoute();
+    const audioUrl = ref("");
+
+    onMounted(() => {
+      audioUrl.value = route.query.audioUrl;
+    });
+
+    return { audioUrl };
   },
 };
 </script>
@@ -38,4 +45,3 @@ export default {
   color: #555;
 }
 </style>
-
