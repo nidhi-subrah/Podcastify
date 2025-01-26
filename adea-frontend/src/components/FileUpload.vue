@@ -41,7 +41,7 @@ export default {
           formData,
           {
             headers: {
-              Authorization: "Bearer: 2lstZGEuQ_xXBPTVBzlaQcj2qyg-NfXwOta1QvidHXE=",
+              Authorization: "Bearer: SOMVBndwBl1lAik6g6GA0oTqmPzUFq2_e--_L7Ac_24=",
               "Content-Type": "multipart/form-data",
             },
           }

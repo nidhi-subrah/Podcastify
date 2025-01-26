@@ -9,9 +9,10 @@ app = Flask(__name__)
 CORS(app)
 
 dotenv.load_dotenv()
-
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
+UPLOAD_FOLDER = 'uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Create the uploads directory if it doesn't exist
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 ALLOWED_EXTENSIONS = {'pdf'}
 
 def allowed_file(filename):
