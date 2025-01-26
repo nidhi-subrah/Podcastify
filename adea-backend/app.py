@@ -1,50 +1,70 @@
-import requests
-import base64
+from flask import Flask, request, jsonify, send_file, send_from_directory
+import os
+from werkzeug.utils import secure_filename
+from flask_cors import CORS
+import dotenv
+from podcastify import convert_pdf_to_text, summarize_text_spacy, generate_podcast_script, get_audio
 
+app = Flask(__name__)
+CORS(app)
 
-API_BASE_URL = "https://api.sws.speechify.com"
-API_KEY = "kO5--wtLz2h-R9NJ-B2S3p0pVFjhFlaBy8hXeWgEfo0="
-VOICE_ID = "george"
+dotenv.load_dotenv()
 
+UPLOAD_FOLDER = 'uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+ALLOWED_EXTENSIONS = {'pdf'}
 
-def get_audio(text):
-    url = f"{API_BASE_URL}/v1/audio/speech"
-    payload = {
-        "input": f"<speak>{text}</speak>",
-        "voice_id": VOICE_ID,
-        "audio_format": "mp3",
-    }
-    headers = {
-        "Authorization": f"Bearer {API_KEY}",
-        "Content-Type": "application/json",
-    }
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-    response = requests.post(url, json=payload, headers=headers)
+@app.route("/upload", methods=["POST"])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
+    file = request.files['file']
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        file.save(file_path)
 
-    if not response.ok:
-        raise Exception(f"{response.status_code} {response.reason}\n{response.text}")
+        # Convert PDF to text
+        pdf_text = convert_pdf_to_text(file_path)
+        if not pdf_text:
+            return jsonify({"error": "Failed to extract text from PDF"}), 400
+        
+        # Summarize and generate podcast script
+        summary = summarize_text_spacy(pdf_text)
+        podcast_script = generate_podcast_script(pdf_text, summary)
+        
+        # Generate audio
+        audio = get_audio(podcast_script)
+        audio_file_path = os.path.join(UPLOAD_FOLDER, "podcast.mp3")
+        with open(audio_file_path, "wb") as audio_file:
+            audio_file.write(audio)
+        
+        # Return JSON response with audio file path
+        return jsonify({"message": summary, "audio_file": "/uploads/podcast.mp3"})
+    
+    return jsonify({"error": "Invalid file type"}), 400
 
-    response_data = response.json()
-    decoded_audio_data = base64.b64decode(response_data["audio_data"])
+# Route to serve uploaded files dynamically
+@app.route("/uploads/<path:filename>", methods=["GET"])
+def serve_uploaded_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
 
-    return decoded_audio_data
-
-def main():
-    # Read text from a file
-    input_file = "input.txt"
-    with open(input_file, "r", encoding="utf-8") as file:
-        text = file.read()
-
-    # Generate audio from the text
+@app.route("/audio", methods=["POST"])
+def generate_audio():
+    data = request.get_json()
+    text = data.get("text")
+    if not text:
+        return jsonify({"error": "No text provided"}), 400
     audio = get_audio(text)
-
-    # Save the audio as an MP3 file
-    output_file = "speech.mp3"
-    with open(output_file, "wb") as file:
-        file.write(audio)
-
-
-    print(f"Audio saved to {output_file}")
+    return send_file(
+        io.BytesIO(audio),
+        mimetype="audio/mpeg",
+        as_attachment=True,
+        attachment_filename="podcast.mp3"
+    )
 
 if __name__ == "__main__":
-    main()
+    app.run(debug=True)
