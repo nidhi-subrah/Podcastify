@@ -3,14 +3,16 @@ import requests
 import base64
 import spacy
 import heapq
-
+import python-dotenv
+import os
 
 # Load spaCy's English NLP model
 nlp = spacy.load("en_core_web_sm")
 
+dotenv.load_dotenv();
 
 API_BASE_URL = "https://api.sws.speechify.com"
-API_KEY = "kO5--wtLz2h-R9NJ-B2S3p0pVFjhFlaBy8hXeWgEfo0="
+API_KEY = os.getenv("API_KEY")
 VOICE_ID = "george"
 
 
