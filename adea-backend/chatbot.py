@@ -1,30 +1,45 @@
-# meant for Python 3, will not work with Python 2
-import requests # pip install requests
+from flask import Flask, request, jsonify
+import requests
 
-api_key = 'VF.DM.6795c19d12f08bcbb5f778d8.O9aqxLFyvDwdACM8' # it should look like this: VF.DM.XXXXXXX.XXXXXX... keep this a secret!
+app = Flask(__name__)
 
-# user_id defines who is having the conversation, e.g. steve, john.doe@gmail.com, username_464
-def interact(user_id, request):
-    response = requests.post(
-        f'https://general-runtime.voiceflow.com/state/user/{user_id}/interact',
-        json={ 'request': request },
-        headers={ 'Authorization': api_key },
-    )
+# Replace with your Voiceflow API key
+API_KEY = "VF.DM.6795c19d12f08bcbb5f778d8.O9aqxLFyvDwdACM8"
 
-    for trace in response.json():
-        if trace['type'] == 'speak' or trace['type'] == 'text':
-            print(trace['payload']['message'])
-        elif trace['type'] == 'end':
-            # an end trace means the the voiceflow dialog has ended
-            return False
-    return True
+# Interact with Voiceflow API
+def interact_with_voiceflow(user_id, user_input):
+    try:
+        response = requests.post(
+            f"https://general-runtime.voiceflow.com/state/user/{user_id}/interact",
+            headers={"Authorization": API_KEY, "Content-Type": "application/json"},
+            json={"request": {"type": "text", "payload": user_input}}
+        )
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        return []
 
-name = input('> What is your name?\n')
-isRunning = interact(name, { 'type': 'launch' })
 
-while (isRunning):
-    nextInput = input('> Say something\n')
-    # send a simple text type request with the user input
-    isRunning = interact(name, { 'type': 'text', 'payload': nextInput })
+@app.route("/api/chat", methods=["POST"])
+def chat():
+    data = request.json
+    user_id = data.get("user_id", "default_user")
+    user_input = data.get("input", "")
 
-input('The end! Start me again with `python index.py` or `python3 index.py`')
+
+    # Communicate with Voiceflow API
+    traces = interact_with_voiceflow(user_id, user_input)
+    responses = []
+
+
+    for trace in traces:
+        if trace["type"] in ["speak", "text"]:
+            responses.append({"sender": "bot", "text": trace["payload"]["message"]})
+        elif trace["type"] == "end":
+            responses.append({"sender": "bot", "text": "The conversation has ended."})
+    
+    return jsonify({"messages": responses})
+
+if __name__ == "__main__":
+    app.run(debug=True)
