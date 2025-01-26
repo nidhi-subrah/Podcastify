@@ -2,7 +2,7 @@
   <div class="audio-player">
     <h2>Listen to Your Podcast</h2>
     <audio controls :src="audioUrl"></audio>
-    <a :href="audioUrl" download class="download-btn">📥 Download Podcast</a>
+    <a :href="audioUrl" download="podcast.mp3" class="download-btn">📥 Download Podcast</a>
   </div>
 </template>
 

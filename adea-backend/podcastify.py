@@ -8,7 +8,7 @@ import heapq
 nlp = spacy.load("en_core_web_sm")
 
 API_BASE_URL = "https://api.sws.speechify.com"
-API_KEY = "oypkN4D9Nh2AcsEmw66ug0nWdk-XS1unprMocyg0yPE="
+API_KEY = "2lstZGEuQ_xXBPTVBzlaQcj2qyg-NfXwOta1QvidHXE="
 VOICE_ID = "george"
 
 # Function to summarize the text using spaCy
