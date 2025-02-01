@@ -1,0 +1,1 @@
+Podcastify transforms textbooks into summarized, natural-sounding podcasts. Simply upload a PDF or DOCX file, and our app processes it into a concise audio summary that’s easy to digest. Users can download the podcasts and listen anytime, anywhere. It’s a tool designed to save time, reduce stress, and help students learn more effectively.
